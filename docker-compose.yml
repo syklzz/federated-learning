@@ -1,16 +1,19 @@
-version: '0.0.0'
+version: "2"
 services:
   aggregator:
+    image: "YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/aggregator"
     build: ${AGGREGATOR}
     network_mode: "host"
     container_name: ${AGGREGATOR}
 
   coll_1:
+    image: "YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/collaborator_1"
     build: ${COLL1}
     network_mode: "host"
     container_name: ${COLL1}
 
   coll_2:
+    image: "YOUR_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/collaborator_2"
     build: ${COLL2}
     network_mode: "host"
     container_name: ${COLL2}
