@@ -3,7 +3,7 @@ service=${AGGREGATOR}
 container=${AGGREGATOR}
 
 start:
-	docker compose up -d
+	docker compose up
 
 stop:
 	docker compose down
