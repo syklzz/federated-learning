@@ -1,0 +1,19 @@
+version: '0.0.0'
+services:
+  aggregator:
+    build: ${AGGREGATOR}
+    network_mode: "host"
+    container_name: ${AGGREGATOR}
+
+  coll_1:
+    build: ${COLL1}
+    network_mode: "host"
+    container_name: ${COLL1}
+
+  coll_2:
+    build: ${COLL2}
+    network_mode: "host"
+    container_name: ${COLL2}
+
+
+
