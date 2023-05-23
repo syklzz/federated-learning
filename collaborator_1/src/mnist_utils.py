@@ -105,10 +105,13 @@ def load_mnist_shard(shard_num, collaborator_count, categorical=True,
     X_train /= 255
     X_valid /= 255
 
+    logger.info("-------==f=efmk-----------------------------------------------------------------------")
+
     logger.info(f'MNIST > X_train Shape : {X_train.shape}')
     logger.info(f'MNIST > y_train Shape : {y_train.shape}')
     logger.info(f'MNIST > Train Samples : {X_train.shape[0]}')
     logger.info(f'MNIST > Valid Samples : {X_valid.shape[0]}')
+    logger.info("--------------++++++++++++++++++++++++++----------------------------------------------------------------")
 
     if categorical:
         # convert class vectors to binary class matrices

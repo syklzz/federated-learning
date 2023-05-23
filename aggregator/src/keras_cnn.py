@@ -7,7 +7,7 @@ import tensorflow.keras as ke
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.layers import Flatten
+from tensorflow.keras.layers import Flatten, Dropout, MaxPooling2D
 
 from openfl.federated import KerasTaskRunner
 

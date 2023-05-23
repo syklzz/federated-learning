@@ -7,7 +7,7 @@ from logging import getLogger
 
 import numpy as np
 from keras.datasets import cifar10
-import cv2
+from PIL import Image
 
 logger = getLogger(__name__)
 
@@ -41,8 +41,26 @@ def _load_raw_datashards(shard_num, collaborator_count):
     """
     (X_train_tot, y_train_tot), (X_valid_tot, y_valid_tot) = cifar10.load_data()
 
-    X_train_tot = np.array([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) for image in X_train_tot])
-    X_valid_tot = np.array([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) for image in X_valid_tot])
+    gray_images = []
+    for image in X_train_tot:
+        # Convert the image to grayscale using PIL
+        gray_image = Image.fromarray(image).convert('L')
+
+        # Append the grayscale image to the list
+        gray_images.append(np.array(gray_image))
+    X_train_tot = np.array(gray_images)
+
+    gray_images_v = []
+    for image in X_valid_tot:
+        # Convert the image to grayscale using PIL
+        gray_image = Image.fromarray(image).convert('L')
+        # Append the grayscale image to the list
+        gray_images_v.append(np.array(gray_image))
+
+    X_valid_tot = np.array(gray_images_v)
+    #
+    # X_train_tot = np.array([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) for image in X_train_tot])
+    # X_valid_tot = np.array([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) for image in X_valid_tot])
 
     # create the shards
     shard_num = int(shard_num)
