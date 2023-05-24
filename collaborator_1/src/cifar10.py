@@ -80,7 +80,6 @@ def load_cifar10_shard(shard_num, collaborator_count, categorical=True,
     img_rows, img_cols = 32, 32
     num_classes = 10
 
-
     (X_train, y_train), (X_valid, y_valid) = _load_raw_datashards(
         shard_num, collaborator_count
     )

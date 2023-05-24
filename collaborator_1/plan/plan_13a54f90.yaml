@@ -34,7 +34,7 @@ data_loader:
   template: src.tfmnist_inmemory.TensorFlowMNISTInMemory
 network:
   settings:
-    agg_addr: krk-mp1po
+    agg_addr: localhost
     agg_port: 60413
     cert_folder: cert
     client_reconnect_interval: 5

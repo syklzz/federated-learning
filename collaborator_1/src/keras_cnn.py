@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 """You may copy this file as the starting point of your own model."""
-
 import tensorflow.keras as ke
+from tensorflow.keras.layers import Dropout, MaxPooling2D
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.layers import Dense
@@ -55,20 +55,21 @@ class KerasCNN(KerasTaskRunner):
 
         """
         model = Sequential()
-        model.add(Conv2D(16,  kernel_size = 3,kernel_initializer='he_normal', activation='relu', input_shape = (32, 32, 1)))
-        model.add(Conv2D(32,  kernel_size = 3,kernel_initializer='he_normal', activation='relu'))
+        model.add(Conv2D(16, kernel_size=3, kernel_initializer='he_normal', activation='relu', input_shape=(32, 32, 1)))
+        model.add(Conv2D(32, kernel_size=3, kernel_initializer='he_normal', activation='relu'))
         model.add(Dropout(0.2))
-        model.add(Conv2D(64, kernel_size = 3, kernel_initializer='he_normal', strides=1, activation='relu'))
+        model.add(Conv2D(64, kernel_size=3, kernel_initializer='he_normal', strides=1, activation='relu'))
         model.add(MaxPooling2D((2, 2)))
-        model.add(Conv2D(128, kernel_size = 3, strides=1, kernel_initializer='he_normal' ,padding='same', activation='relu'))
+        model.add(
+            Conv2D(128, kernel_size=3, strides=1, kernel_initializer='he_normal', padding='same', activation='relu'))
         model.add(MaxPooling2D((2, 2)))
-        model.add(Conv2D(256, kernel_size = 3,kernel_initializer='he_normal', activation='relu'))
+        model.add(Conv2D(256, kernel_size=3, kernel_initializer='he_normal', activation='relu'))
         model.add(MaxPooling2D((4, 4)))
         model.add(Dropout(0.2))
         model.add(Flatten())
-        model.add(Dense(100,kernel_initializer='he_normal', activation = "relu"))
+        model.add(Dense(100, kernel_initializer='he_normal', activation="relu"))
         model.add(Dropout(0.1))
-        model.add(Dense(num_classes, kernel_initializer='glorot_uniform', activation = "softmax"))
+        model.add(Dense(num_classes, kernel_initializer='glorot_uniform', activation="softmax"))
         model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=['accuracy'])
 
         # initialize the optimizer variables
@@ -152,4 +153,3 @@ class KerasCNN(KerasTaskRunner):
 #             v.initializer.run(session=self.sess)
 #
 #         return model
-
