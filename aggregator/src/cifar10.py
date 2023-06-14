@@ -1,8 +1,3 @@
-# Copyright (C) 2020-2021 Intel Corporation
-# SPDX-License-Identifier: Apache-2.0
-
-"""You may copy this file as the starting point of your own model."""
-
 from logging import getLogger
 
 import numpy as np
@@ -58,9 +53,6 @@ def _load_raw_datashards(shard_num, collaborator_count):
         gray_images_v.append(np.array(gray_image))
 
     X_valid_tot = np.array(gray_images_v)
-    #
-    # X_train_tot = np.array([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) for image in X_train_tot])
-    # X_valid_tot = np.array([cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) for image in X_valid_tot])
 
     # create the shards
     shard_num = int(shard_num)
@@ -69,6 +61,9 @@ def _load_raw_datashards(shard_num, collaborator_count):
 
     X_valid = X_valid_tot[shard_num::collaborator_count]
     y_valid = y_valid_tot[shard_num::collaborator_count]
+
+    X_train = np.resize(X_train, (X_train.shape[0], 28, 28, 1))
+    X_valid = np.resize(X_valid, (X_valid.shape[0], 28, 28, 1))
 
     return (X_train, y_train), (X_valid, y_valid)
 
@@ -95,7 +90,7 @@ def load_cifar10_shard(shard_num, collaborator_count, categorical=True,
         numpy.ndarray: The validation data
         numpy.ndarray: The validation labels
     """
-    img_rows, img_cols = 32, 32
+    img_rows, img_cols = 28, 28
     num_classes = 10
 
 
@@ -124,7 +119,7 @@ def load_cifar10_shard(shard_num, collaborator_count, categorical=True,
 
     if categorical:
         # convert class vectors to binary class matrices
-        y_train = one_hot(y_train, num_classes)
-        y_valid = one_hot(y_valid, num_classes)
+        y_train = one_hot(y_train.reshape((y_train.shape[0],)), num_classes)
+        y_valid = one_hot(y_valid.reshape((y_valid.shape[0],)), num_classes)
 
     return input_shape, num_classes, X_train, y_train, X_valid, y_valid

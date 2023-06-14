@@ -31,7 +31,7 @@ data_loader:
     batch_size: 256
     collaborator_count: 2
     data_group_name: cifar
-  template: src.tfmnist_inmemory.TensorFlowMNISTInMemory
+  template: src.tfcifar_inmemory.TensorFlowCIFARInMemory
 network:
   settings:
     agg_addr: localhost
