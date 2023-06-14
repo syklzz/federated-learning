@@ -1,12 +1,8 @@
-# Copyright (C) 2020-2021 Intel Corporation
-# SPDX-License-Identifier: Apache-2.0
-
-"""You may copy this file as the starting point of your own model."""
-
 from logging import getLogger
 
 import numpy as np
-from tensorflow.python.keras.utils.data_utils import get_file
+from keras.datasets import cifar10
+from PIL import Image
 
 logger = getLogger(__name__)
 
@@ -38,18 +34,25 @@ def _load_raw_datashards(shard_num, collaborator_count):
     Returns:
         2 tuples: (image, label) of the training, validation dataset
     """
-    origin_folder = 'https://storage.googleapis.com/tensorflow/tf-keras-datasets/'
-    path = get_file('mnist.npz',
-                    origin=origin_folder + 'mnist.npz',
-                    file_hash='731c5ac602752760c8e48fbffcf8c3b850d9dc2a2aedcf2cc48468fc17b673d1')
+    (X_train_tot, y_train_tot), (X_valid_tot, y_valid_tot) = cifar10.load_data()
 
-    with np.load(path) as f:
-        # get all of mnist
-        X_train_tot = f['x_train']
-        y_train_tot = f['y_train']
+    gray_images = []
+    for image in X_train_tot:
+        # Convert the image to grayscale using PIL
+        gray_image = Image.fromarray(image).convert('L')
 
-        X_valid_tot = f['x_test']
-        y_valid_tot = f['y_test']
+        # Append the grayscale image to the list
+        gray_images.append(np.array(gray_image))
+    X_train_tot = np.array(gray_images)
+
+    gray_images_v = []
+    for image in X_valid_tot:
+        # Convert the image to grayscale using PIL
+        gray_image = Image.fromarray(image).convert('L')
+        # Append the grayscale image to the list
+        gray_images_v.append(np.array(gray_image))
+
+    X_valid_tot = np.array(gray_images_v)
 
     # create the shards
     shard_num = int(shard_num)
@@ -59,10 +62,13 @@ def _load_raw_datashards(shard_num, collaborator_count):
     X_valid = X_valid_tot[shard_num::collaborator_count]
     y_valid = y_valid_tot[shard_num::collaborator_count]
 
+    X_train = np.resize(X_train, (X_train.shape[0], 28, 28, 1))
+    X_valid = np.resize(X_valid, (X_valid.shape[0], 28, 28, 1))
+
     return (X_train, y_train), (X_valid, y_valid)
 
 
-def load_mnist_shard(shard_num, collaborator_count, categorical=True,
+def load_cifar10_shard(shard_num, collaborator_count, categorical=True,
                      channels_last=True, **kwargs):
     """
     Load the MNIST dataset.
@@ -87,6 +93,7 @@ def load_mnist_shard(shard_num, collaborator_count, categorical=True,
     img_rows, img_cols = 28, 28
     num_classes = 10
 
+
     (X_train, y_train), (X_valid, y_valid) = _load_raw_datashards(
         shard_num, collaborator_count
     )
@@ -105,14 +112,14 @@ def load_mnist_shard(shard_num, collaborator_count, categorical=True,
     X_train /= 255
     X_valid /= 255
 
-    logger.info(f'MNIST > X_train Shape : {X_train.shape}')
-    logger.info(f'MNIST > y_train Shape : {y_train.shape}')
-    logger.info(f'MNIST > Train Samples : {X_train.shape[0]}')
-    logger.info(f'MNIST > Valid Samples : {X_valid.shape[0]}')
+    logger.info(f'CIFAR10 > X_train Shape : {X_train.shape}')
+    logger.info(f'CIFAR10 > y_train Shape : {y_train.shape}')
+    logger.info(f'CIFAR10 > Train Samples : {X_train.shape[0]}')
+    logger.info(f'CIFAR10 > Valid Samples : {X_valid.shape[0]}')
 
     if categorical:
         # convert class vectors to binary class matrices
-        y_train = one_hot(y_train, num_classes)
-        y_valid = one_hot(y_valid, num_classes)
+        y_train = one_hot(y_train.reshape((y_train.shape[0],)), num_classes)
+        y_valid = one_hot(y_valid.reshape((y_valid.shape[0],)), num_classes)
 
     return input_shape, num_classes, X_train, y_train, X_valid, y_valid
