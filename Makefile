@@ -3,19 +3,19 @@ service=${AGGREGATOR}
 container=${AGGREGATOR}
 
 start:
-	docker compose up
+	docker-compose up
 
 stop:
-	docker compose down
+	docker-compose down
 
 logs:
-	docker compose logs
+	docker-compose logs
 
 ps:
-	docker compose ps
+	docker-compose ps
 
 logs_service:
-	docker compose logs --follow --no-log-prefix --timestamps $(service)
+	docker-compose logs --follow --no-log-prefix --timestamps $(service)
 
 logs_container:
 	docker logs --follow --timestamps $(container)
